@@ -1,4 +1,7 @@
 ﻿#include <SFML/Graphics.hpp>
+#include<ctime>
+
+double getRandomNumber(const int& min, const int& max);
 
 int main()
 {
@@ -85,13 +88,15 @@ int main()
 
         if (!beeActive)
         {
-            srand((int)time(0));
-            beeSpeed = (rand() % 200) + 200;
+            srand(time(0));        //Подготовка с работе с псевдосдучайными числами
+            beeSpeed = (rand() % 200) + 200;        //Задание скорости пчелы 
+            //beeSpeed=getRandomNumber(100, 200);
 
-            srand((int)time(0)*10);
-            float height = (rand() % 500) + 100;
+            srand(time(0)*10);
+            float height = (rand() % 1080) + 100;        //Задание псевдослучайной
             spriteBee.setPosition(2000 * scaleF, height * scaleF);
             //spriteBee.setPosition(2000 * scaleF, 100);
+            //double testPositionYBee = spriteBee.getPosition().y;
             beeActive = true;
         }
         else
@@ -107,7 +112,7 @@ int main()
 
             srand((int)time(0) * 10);
             float height = rand() % 150;
-            spriteCloud_1.setPosition(-200 * scaleF, height * scaleF);
+            spriteCloud_1.setPosition(-200, height * scaleF);
             cloud1_Active = true;
         }
         else
@@ -126,7 +131,7 @@ int main()
 
             srand((int)time(0) * 20);
             float height = (rand() %300)-150;
-            spriteCloud_2.setPosition(-200 * scaleF, height * scaleF);
+            spriteCloud_2.setPosition(-200, height * scaleF);
             cloud2_Active = true;
         }
         else
@@ -145,7 +150,7 @@ int main()
 
             srand((int)time(0) * 30);
             float height = (rand() % 450)-150;
-            spriteCloud_3.setPosition(-200 * scaleF, height * scaleF);
+            spriteCloud_3.setPosition(-200, height * scaleF);
             cloud3_Active = true;
         }
         else
@@ -168,4 +173,13 @@ int main()
         window.display();   //Вывод отрисованного на экран
     }
     return 0;
+}
+
+double getRandomNumber(const int& min, const int& max)
+// Генерируем рандомное число между значениями min и max.
+// Предполагается, что функцию srand() уже вызывали
+{
+    static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
+    // Равномерно распределяем рандомное число в нашем диапазоне
+    return static_cast<double>(rand() * fraction * (max - min + 1) + min);
 }
