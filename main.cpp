@@ -68,6 +68,8 @@ int main()
     double cloud2_Speed = 0.0;
     double cloud3_Speed = 0.0;
 
+    sf::Clock clock;
+
     while (window.isOpen())
     //Выполнение цикла пока открыто рабочее окно
     {
@@ -78,6 +80,26 @@ int main()
         }
 
         window.clear();
+        sf::Time dt = clock.restart();      //Время между двумя кадрами
+
+        if (!beeActive)
+        {
+            srand((int)time(0));
+            beeSpeed = (rand() % 20) + 20;
+
+            srand((int)time(0)*10);
+            double height = (rand() % 50) + 50;
+            spriteBee.setPosition(2000 * scaleF, height * scaleF);
+            beeActive = true;
+        }
+        else
+        {
+            spriteBee.setPosition(spriteBee.getPosition().x * scaleF -(beeSpeed*dt.asSeconds()),spriteBee.getPosition().y * scaleF);
+            if (spriteBee.getPosition().x < (-100 * scaleF)) beeActive = false;
+        }
+
+
+
         window.draw(spriteBackground);      //Рисование спрайта фона
 
         window.draw(spriteCloud_1);     //Рисование спрайта облаков
