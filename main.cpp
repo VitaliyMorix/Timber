@@ -38,7 +38,8 @@ int main()
     textureBee.loadFromFile("graphics/bee.png");
     sf::Sprite spriteBee;
     spriteBee.setTexture(textureBee);
-    spriteBee.setPosition(0, 800*scaleF);
+    //spriteBee.setPosition(0, 800*scaleF);
+    spriteBee.setPosition(0, 0);
     spriteBee.setScale(scaleF, scaleF);
 
     bool beeActive = false;     //Активность пчелы
@@ -85,20 +86,76 @@ int main()
         if (!beeActive)
         {
             srand((int)time(0));
-            beeSpeed = (rand() % 20) + 20;
+            beeSpeed = (rand() % 200) + 200;
 
             srand((int)time(0)*10);
-            double height = (rand() % 50) + 50;
+            float height = (rand() % 500) + 100;
             spriteBee.setPosition(2000 * scaleF, height * scaleF);
+            //spriteBee.setPosition(2000 * scaleF, 100);
             beeActive = true;
         }
         else
         {
-            spriteBee.setPosition(spriteBee.getPosition().x * scaleF -(beeSpeed*dt.asSeconds()),spriteBee.getPosition().y * scaleF);
+            spriteBee.setPosition((spriteBee.getPosition().x -(beeSpeed*dt.asSeconds())*scaleF),spriteBee.getPosition().y);
             if (spriteBee.getPosition().x < (-100 * scaleF)) beeActive = false;
         }
+        //double testPosBee = spriteBee.getPosition().y;
+        if(!cloud1_Active)
+        {
+            srand((int)time(0) * 10);
+            cloud1_Speed = rand() % 200;
 
+            srand((int)time(0) * 10);
+            float height = rand() % 150;
+            spriteCloud_1.setPosition(-200 * scaleF, height * scaleF);
+            cloud1_Active = true;
+        }
+        else
+        {
+            spriteCloud_1.setPosition((spriteCloud_1.getPosition().x + (cloud1_Speed * dt.asSeconds()) * scaleF), spriteCloud_1.getPosition().y);
+            if (spriteCloud_1.getPosition().x > wX * scaleF)
+            {
+                cloud1_Active = false;
+            }
+        }
 
+        if (!cloud2_Active)
+        {
+            srand((int)time(0) * 20);
+            cloud2_Speed = rand() % 200;
+
+            srand((int)time(0) * 20);
+            float height = (rand() %300)-150;
+            spriteCloud_2.setPosition(-200 * scaleF, height * scaleF);
+            cloud2_Active = true;
+        }
+        else
+        {
+            spriteCloud_2.setPosition((spriteCloud_2.getPosition().x + (cloud2_Speed * dt.asSeconds()) * scaleF), spriteCloud_2.getPosition().y);
+            if (spriteCloud_2.getPosition().x > wX * scaleF)
+            {
+                cloud2_Active = false;
+            }
+        }
+
+        if (!cloud3_Active)
+        {
+            srand((int)time(0) * 30);
+            cloud3_Speed = rand() % 200;
+
+            srand((int)time(0) * 30);
+            float height = (rand() % 450)-150;
+            spriteCloud_3.setPosition(-200 * scaleF, height * scaleF);
+            cloud3_Active = true;
+        }
+        else
+        {
+            spriteCloud_3.setPosition((spriteCloud_3.getPosition().x + (cloud3_Speed * dt.asSeconds()) * scaleF), spriteCloud_3.getPosition().y);
+            if (spriteCloud_3.getPosition().x > wX * scaleF)
+            {
+                cloud3_Active = false;
+            }
+        }
 
         window.draw(spriteBackground);      //Рисование спрайта фона
 
