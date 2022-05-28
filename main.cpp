@@ -1,8 +1,6 @@
 ﻿#include <SFML/Graphics.hpp>
 #include<ctime>
 
-double getRandomNumber(const int& min, const int& max);
-
 int main()
 {
     /*
@@ -93,18 +91,20 @@ int main()
             //beeSpeed=getRandomNumber(100, 200);
 
             srand(time(0)*10);
-            float height = (rand() % 1080) + 100;        //Задание псевдослучайной
-            spriteBee.setPosition(2000 * scaleF, height * scaleF);
+            float height = (rand() % 1080) + 100;        //Вычисление псевдослучайной высоты полета
+            spriteBee.setPosition(2000 * scaleF, height * scaleF);      //Задание позиции пчелы с учетом новых параметров
             //spriteBee.setPosition(2000 * scaleF, 100);
             //double testPositionYBee = spriteBee.getPosition().y;
-            beeActive = true;
+            beeActive = true;       //Приводим пчелу в движение
         }
         else
         {
+            //Обновление позиции пчелы с учетом её скорости
             spriteBee.setPosition((spriteBee.getPosition().x -(beeSpeed*dt.asSeconds())*scaleF),spriteBee.getPosition().y);
-            if (spriteBee.getPosition().x < (-100 * scaleF)) beeActive = false;
+            if (spriteBee.getPosition().x < (-100 * scaleF)) beeActive = false;     //Останавливаем пчелу
         }
         //double testPosBee = spriteBee.getPosition().y;
+        //Облака движутся по тому же принципу, что и пчела
         if(!cloud1_Active)
         {
             srand((int)time(0) * 10);
@@ -173,13 +173,4 @@ int main()
         window.display();   //Вывод отрисованного на экран
     }
     return 0;
-}
-
-double getRandomNumber(const int& min, const int& max)
-// Генерируем рандомное число между значениями min и max.
-// Предполагается, что функцию srand() уже вызывали
-{
-    static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
-    // Равномерно распределяем рандомное число в нашем диапазоне
-    return static_cast<double>(rand() * fraction * (max - min + 1) + min);
 }
