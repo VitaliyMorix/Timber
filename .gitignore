@@ -390,7 +390,9 @@ MigrationBackup/
 .ionide/
 
 # End of https://www.gitignore.io/api/c++,visualstudio
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
-*.sln
+# *.vcxproj
+# *.vcxproj.filters
+# *.vcxproj.user
+# *.sln
+.vscode
+timber
