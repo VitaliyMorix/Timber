@@ -1,4 +1,5 @@
 ﻿#include <SFML/Graphics.hpp>
+#include<sstream>
 #include<ctime>
 
 int main()
@@ -8,7 +9,7 @@ int main()
     * hY - длина
     * scaleF - величина масштабирования
     */
-    double wX = 1920, hY = 1080, scaleF = 0.5;
+    float wX = 1920, hY = 1080, scaleF = 0.5;
 	wX*=scaleF; hY*=scaleF;
     sf::VideoMode vm(wX, hY);
     sf::RenderWindow window(vm, "Timber!!!");       //Вызов рендера окна с характеристиками
@@ -46,7 +47,7 @@ int main()
     spriteBee.setScale(scaleF, scaleF);
 
     bool beeActive = false;     //Активность пчелы
-    double beeSpeed = 0.0;      //Скорость пчелы
+    float beeSpeed = 0.0;      //Скорость пчелы
 
     //Облака
     sf::Texture textureCloud;
@@ -68,13 +69,47 @@ int main()
     bool cloud2_Active = false;
     bool cloud3_Active = false;
 
-    double cloud1_Speed = 0.0;      //Скорость облаков
-    double cloud2_Speed = 0.0;
-    double cloud3_Speed = 0.0;
+    float cloud1_Speed = 0.0;      //Скорость облаков
+    float cloud2_Speed = 0.0;
+    float cloud3_Speed = 0.0;
 
     sf::Clock clock;
 
+	sf::RectangleShape timeBar;
+	float timeBarStartWidth = 400;
+	float timeBarHeight = 80;
+	timeBar.setSize(sf::Vector2f(timeBarStartWidth*scaleF,timeBarHeight*scaleF));
+	timeBar.setFillColor(sf::Color::Red);
+	timeBar.setPosition((wX-timeBarStartWidth)*scaleF/2, 980*scaleF);
+
+	sf::Time gameTimeTotal;
+	float timeRemaining = 6.0;
+	float timeBarWidthPerSecond = timeBarStartWidth/timeRemaining;
+
 	bool paused=true;
+	int score=0;
+	sf::Text messageText, scoreText;
+	sf::Font font;
+	font.loadFromFile("fonts/KOMIKAP_.ttf");
+
+	messageText.setFont(font);
+	scoreText.setFont(font);
+
+	messageText.setString("Press Enter to start!");
+	scoreText.setString("Score = 0");
+
+	messageText.setCharacterSize(75*scaleF);
+	scoreText.setCharacterSize(100*scaleF);
+
+	messageText.setFillColor(sf::Color::White);
+	scoreText.setFillColor(sf::Color::White);
+
+	sf::FloatRect textRect = messageText.getLocalBounds();
+
+	messageText.setOrigin(textRect.left + textRect.width/2, textRect.top+textRect.height/2);
+
+	messageText.setPosition(wX/2,hY/2);
+	scoreText.setPosition(20,20);
 
     while (window.isOpen())
     //Выполнение цикла пока открыто рабочее окно
@@ -87,6 +122,8 @@ int main()
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
 		{
 			paused=false;
+			score=0;
+			timeRemaining=6;
 		}
         
         sf::Time dt = clock.restart();      //Время между двумя кадрами
@@ -98,6 +135,19 @@ int main()
 		*/
 		if(!paused)
 		{
+			sf::Time dt =clock.restart();
+
+			timeRemaining -= dt.asSeconds();
+			timeBar.setSize(sf::Vector2f(timeBarWidthPerSecond*timeRemaining, timeBarHeight));
+
+			if(timeRemaining<=0)
+			{
+				messageText.setString("Out of time!");
+				sf::FloatRect textRect = messageText.getLocalBounds();
+				messageText.setOrigin(textRect.left + textRect.width/2, textRect.top+textRect.height/2);
+				messageText.setPosition(wX/2, hY/2);
+			}
+
 			if (!beeActive)
 			{
 				srand(time(0));        //Подготовка с работе с псевдосдучайными числами
@@ -108,7 +158,7 @@ int main()
 				float height = (rand() % 1080) + 100;        //Вычисление псевдослучайной высоты полета
 				spriteBee.setPosition(2000 * scaleF, height * scaleF);      //Задание позиции пчелы с учетом новых параметров
 				//spriteBee.setPosition(2000 * scaleF, 100);
-				//double testPositionYBee = spriteBee.getPosition().y;
+				//float testPositionYBee = spriteBee.getPosition().y;
 				beeActive = true;       //Приводим пчелу в движение
 			}
 			else
@@ -117,7 +167,7 @@ int main()
 				spriteBee.setPosition((spriteBee.getPosition().x -(beeSpeed*dt.asSeconds())*scaleF),spriteBee.getPosition().y);
 				if (spriteBee.getPosition().x < (-100 * scaleF)) beeActive = false;     //Останавливаем пчелу
 			}
-			//double testPosBee = spriteBee.getPosition().y;
+			//float testPosBee = spriteBee.getPosition().y;
 			//Облака движутся по тому же принципу, что и пчела
 			if(!cloud1_Active)
 			{
@@ -175,6 +225,9 @@ int main()
 					cloud3_Active = false;
 				}
 			}
+			std::stringstream ss;
+			ss<<"Score = "<<score;
+			scoreText.setString(ss.str());
 		}
 		/*
 		***************
@@ -191,6 +244,14 @@ int main()
 
         window.draw(spriteTree);        //Рисование спрайта дерева
         window.draw(spriteBee);     //Рисование спрайта пчелы
+		window.draw(scoreText);
+		window.draw(timeBar);
+
+		if(paused)
+		{
+			window.draw(messageText);
+		}
+
         window.display();   //Вывод отрисованного на экран
     }
     return 0;
