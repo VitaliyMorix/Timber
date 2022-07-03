@@ -4,16 +4,12 @@
 
 int main()
 {
-    /*
-    * wX - ширина
-    * hY - длина
-    * scaleF - величина масштабирования
-    */
-    float wX = 1920, hY = 1080, scaleF = 0.5;
+    float wX = 1920, hY = 1080, scaleF = 0.5f;
+	
 	wX*=scaleF; hY*=scaleF;
     sf::VideoMode vm(wX, hY);
     sf::RenderWindow window(vm, "Timber!!!");       //Вызов рендера окна с характеристиками
-	window.setFramerateLimit(60);
+    window.setFramerateLimit(60);
 
     //sf::VideoMode vm(1920, 1080);
     // sf::Style::Fullscreen - параметр для вывода в полный экран
@@ -47,7 +43,7 @@ int main()
     spriteBee.setScale(scaleF, scaleF);
 
     bool beeActive = false;     //Активность пчелы
-    float beeSpeed = 0.0;      //Скорость пчелы
+    float beeSpeed = 0.0f;      //Скорость пчелы
 
     //Облака
     sf::Texture textureCloud;
@@ -69,21 +65,21 @@ int main()
     bool cloud2_Active = false;
     bool cloud3_Active = false;
 
-    float cloud1_Speed = 0.0;      //Скорость облаков
-    float cloud2_Speed = 0.0;
-    float cloud3_Speed = 0.0;
+    float cloud1_Speed = 0.0f;      //Скорость облаков
+    float cloud2_Speed = 0.0f;
+    float cloud3_Speed = 0.0f;
 
     sf::Clock clock;
 
 	sf::RectangleShape timeBar;
-	float timeBarStartWidth = 400;
-	float timeBarHeight = 80;
+	float timeBarStartWidth = 400.0f;
+	float timeBarHeight = 80.0f;
 	timeBar.setSize(sf::Vector2f(timeBarStartWidth*scaleF,timeBarHeight*scaleF));
 	timeBar.setFillColor(sf::Color::Red);
 	timeBar.setPosition((wX-timeBarStartWidth)*scaleF/2, 980*scaleF);
 
 	sf::Time gameTimeTotal;
-	float timeRemaining = 6.0;
+	float timeRemaining = 6.0f;
 	float timeBarWidthPerSecond = timeBarStartWidth/timeRemaining;
 
 	bool paused=true;
@@ -109,7 +105,7 @@ int main()
 	messageText.setOrigin(textRect.left + textRect.width/2, textRect.top+textRect.height/2);
 
 	messageText.setPosition(wX/2,hY/2);
-	scoreText.setPosition(20,20);
+	scoreText.setPosition(20*scaleF,20*scaleF);
 
     while (window.isOpen())
     //Выполнение цикла пока открыто рабочее окно
@@ -123,7 +119,7 @@ int main()
 		{
 			paused=false;
 			score=0;
-			timeRemaining=6;
+			timeRemaining=6.0f;
 		}
         
         sf::Time dt = clock.restart();      //Время между двумя кадрами
@@ -140,8 +136,9 @@ int main()
 			timeRemaining -= dt.asSeconds();
 			timeBar.setSize(sf::Vector2f(timeBarWidthPerSecond*timeRemaining, timeBarHeight));
 
-			if(timeRemaining<=0)
+			if(timeRemaining<=0.0f)
 			{
+				paused=true;
 				messageText.setString("Out of time!");
 				sf::FloatRect textRect = messageText.getLocalBounds();
 				messageText.setOrigin(textRect.left + textRect.width/2, textRect.top+textRect.height/2);
@@ -244,6 +241,7 @@ int main()
 
         window.draw(spriteTree);        //Рисование спрайта дерева
         window.draw(spriteBee);     //Рисование спрайта пчелы
+
 		window.draw(scoreText);
 		window.draw(timeBar);
 
