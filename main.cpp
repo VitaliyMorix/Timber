@@ -71,19 +71,25 @@ int main()
 
     sf::Clock clock;
 
+	/*Блок кода для формирования timeBar*/
 	sf::RectangleShape timeBar;
-	float timeBarStartWidth = 400.0f;
-	float timeBarHeight = 80.0f;
-	timeBar.setSize(sf::Vector2f(timeBarStartWidth*scaleF,timeBarHeight*scaleF));
+	float timeBarStartWidth = 400*scaleF;
+	float timeBarHeight = 80*scaleF;
+	
+	timeBar.setSize(sf::Vector2f(timeBarStartWidth,timeBarHeight));
+	//timeBar.setSize(sf::Vector2f(timeBarStartWidth,timeBarHeight));
 	timeBar.setFillColor(sf::Color::Red);
-	timeBar.setPosition((wX-timeBarStartWidth)*scaleF/2, 980*scaleF);
-
+	timeBar.setPosition((wX-timeBarStartWidth)/2, 980*scaleF);
+	//timeBar.setPosition((wX-timeBarStartWidth)/2, 980);
+	
 	sf::Time gameTimeTotal;
 	float timeRemaining = 6.0f;
 	float timeBarWidthPerSecond = timeBarStartWidth/timeRemaining;
+	/*////////////////////////////////////*/
 
 	bool paused=true;
 	int score=0;
+
 	sf::Text messageText, scoreText;
 	sf::Font font;
 	font.loadFromFile("fonts/KOMIKAP_.ttf");
@@ -110,6 +116,7 @@ int main()
     while (window.isOpen())
     //Выполнение цикла пока открыто рабочее окно
     {
+		//++score;
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
         //Провекра на нажатие кнопки
         {
@@ -119,10 +126,10 @@ int main()
 		{
 			paused=false;
 			score=0;
-			timeRemaining=6.0f;
+			timeRemaining=5;
 		}
         
-        sf::Time dt = clock.restart();      //Время между двумя кадрами
+        //sf::Time dt = clock.restart();      //Время между двумя кадрами
 
 		/*
 		****************
@@ -131,12 +138,12 @@ int main()
 		*/
 		if(!paused)
 		{
+			//++score;
 			sf::Time dt =clock.restart();
-
 			timeRemaining -= dt.asSeconds();
 			timeBar.setSize(sf::Vector2f(timeBarWidthPerSecond*timeRemaining, timeBarHeight));
 
-			if(timeRemaining<=0.0f)
+			if(timeRemaining <= 0.0f)
 			{
 				paused=true;
 				messageText.setString("Out of time!");
